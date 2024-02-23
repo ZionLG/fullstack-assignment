@@ -17,7 +17,6 @@
   "dependencies": {
     "@fastify/cors": "^8.5.0",
     "@fastify/websocket": "^8.3.1",
-    "@acme/db": "workspace:^0.1.0",
     "@acme/validators": "workspace:^0.1.0",
     "@trpc/server": "next",
     "@types/cors": "^2.8.17",

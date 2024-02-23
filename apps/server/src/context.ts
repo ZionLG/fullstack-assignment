@@ -1,7 +1,5 @@
 import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 
-import { prisma } from "@acme/db";
-
 /**
  * Defines your inner context shape.
  * Add fields here that the inner context brings.
@@ -19,7 +17,6 @@ type CreateInnerContextOptions = Partial<CreateFastifyContextOptions>;
  */
 export function createContextInner(_opts?: CreateInnerContextOptions) {
   return {
-    prisma,
   };
 }
 
