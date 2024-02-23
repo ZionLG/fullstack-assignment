@@ -31,15 +31,6 @@ function RootComponent() {
           >
             Home
           </Link>
-          <Link
-            to="/fleets/view"
-            activeProps={{
-              className: "font-bold",
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Fleets
-          </Link>
         </div>
         <hr />
         <Outlet />
