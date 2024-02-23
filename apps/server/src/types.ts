@@ -38,29 +38,31 @@ type VesselLocation = {
 };
 
 type ReportedPort = {
-  ts: string;
-  name: string;
+  ts: string | null;
+  name: string | null;
 };
 
 type Vessel = {
   _id: string;
   oldShipId: number;
   mmsi: number;
-  imo: null | number;
-  name: string;
-  callsign: string;
-  owner: null | string;
-  reported_port: ReportedPort;
-  vessel_class: string;
-  size: number;
-  drought: number;
-  flag: string;
-  is_alive: boolean;
-  deadweight: number;
-  max_draught: string;
-  vessel_type: string;
-  number_of_blips: number;
-  draught: number;
+  imo?: string | null;
+  name?: string | null;
+  callsign?: string | null;
+  owner?: string | null;
+  reported_port?: ReportedPort;
+  vessel_class?: string;
+  size?: number;
+  drought?: number;
+  flag?: string;
+  is_alive?: boolean;
+  deadweight?: number;
+  max_draught?: string;
+  vessel_type?: string;
+  number_of_blips?: number;
+  draught?: number;
+  service_speed?: string;
+  buildYear?: number;
 };
 
 // Define a mapping from keys to types

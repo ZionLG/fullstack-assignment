@@ -14,24 +14,32 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as FleetsFleetIdRouteImport } from './routes/fleets/$fleetId/route'
 
 // Create Virtual Routes
 
-const FleetsViewRouteLazyImport = createFileRoute('/fleets-view')()
+const FleetsViewRouteLazyImport = createFileRoute('/fleets/view')()
 
 // Create/Update Routes
-
-const FleetsViewRouteLazyRoute = FleetsViewRouteLazyImport.update({
-  path: '/fleets-view',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/fleets-view/route.lazy').then((d) => d.Route),
-)
 
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const FleetsViewRouteLazyRoute = FleetsViewRouteLazyImport.update({
+  path: '/fleets/view',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/fleets/view/route.lazy').then((d) => d.Route),
+)
+
+const FleetsFleetIdRouteRoute = FleetsFleetIdRouteImport.update({
+  path: '/fleets/$fleetId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/fleets/$fleetId/route.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -41,7 +49,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/fleets-view': {
+    '/fleets/$fleetId': {
+      preLoaderRoute: typeof FleetsFleetIdRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/fleets/view': {
       preLoaderRoute: typeof FleetsViewRouteLazyImport
       parentRoute: typeof rootRoute
     }
@@ -52,6 +64,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
+  FleetsFleetIdRouteRoute,
   FleetsViewRouteLazyRoute,
 ])
 

@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
 import { queryClient, trpc, trpcClient } from "./utils/trpc";
 
+import "leaflet/dist/leaflet.css";
 import "./index.css";
 
 const router = createRouter({

@@ -32,7 +32,7 @@ function RootComponent() {
             Home
           </Link>
           <Link
-            to="/fleets-view"
+            to="/fleets/view"
             activeProps={{
               className: "font-bold",
             }}

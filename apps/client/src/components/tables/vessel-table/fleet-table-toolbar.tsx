@@ -1,5 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import { DataTableViewOptions } from "@/components/ui/generic-table/data-table-view-options";
 import { Input } from "@/components/ui/input";
 import { Loader2, X } from "lucide-react";
 
@@ -42,6 +43,7 @@ export function DataTableToolbar<TData>({
 
       <div className="flex items-center gap-5">
         {isLoading && <Loader2 size={32} className="animate-spin" />}
+        <DataTableViewOptions table={table} />
       </div>
     </div>
   );

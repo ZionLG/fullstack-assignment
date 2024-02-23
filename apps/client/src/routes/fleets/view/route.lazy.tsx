@@ -13,10 +13,10 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { sortStateSchemaFleet } from "@acme/validators";
 
-export const Route = createLazyFileRoute("/fleets-view")({
-  component: OperationalToolCreationComponent,
+export const Route = createLazyFileRoute("/fleets/view")({
+  component: FleetsViewComponent,
 });
-function OperationalToolCreationComponent() {
+function FleetsViewComponent() {
   const [{ pageIndex, pageSize }, setPagination] =
     React.useState<PaginationState>({
       pageIndex: 0,
@@ -55,9 +55,6 @@ function OperationalToolCreationComponent() {
           pagination: pagination,
           setPagination: setPagination,
           initialVisibility: {
-            createdAt: false,
-            customerName: false,
-            operationalToolType: false,
             id: false,
           },
           columnFilters: columnFilters,

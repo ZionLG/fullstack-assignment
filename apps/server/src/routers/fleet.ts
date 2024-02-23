@@ -1,6 +1,7 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { sortStateSchemaFleet } from "@acme/validators";
+import { sortStateSchemaFleet, sortStateSchemaVessel } from "@acme/validators";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -10,7 +11,102 @@ export const fleetRouter = createTRPCRouter({
     .query(({ input }) => {
       return { text: `Hello ${input?.name ?? "world"}` };
     }),
+  getFleetById: publicProcedure
+    .input(
+      z.object({
+        fleetId: z.string(),
+        take: z.number().min(1).max(100),
+        skip: z.number().min(0),
+        sort: sortStateSchemaVessel,
+      }),
+    )
+    .query(({ ctx, input }) => {
+      console.log(input.sort);
+      const fleet = ctx.dataFiles.fleets.find(
+        (fleet) => fleet._id === input.fleetId,
+      );
+      if (!fleet) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Fleet not found" });
+      }
 
+      const vessels = ctx.dataFiles.vessels.filter((vessel) => {
+        const fleetVesselsId = fleet.vessels.map((vessel) => vessel._id);
+        return fleetVesselsId.includes(vessel._id);
+      });
+
+      // Use slice to implement pagination
+      const paginatedVessels = vessels
+        .slice(input.skip, input.skip + input.take)
+        .sort((a, b) => {
+          if (input.sort.length === 0) {
+            return 0;
+          }
+
+          const sort = input.sort[0];
+
+          if (sort) {
+            if (sort.id in a && sort.id in b) {
+              if (
+                typeof a[sort.id] === "number" &&
+                typeof b[sort.id] === "number"
+              ) {
+                const aValue = Number(a[sort.id]);
+                const bValue = Number(b[sort.id]);
+                if (sort.desc) {
+                  return bValue - aValue;
+                } else {
+                  return aValue - bValue;
+                }
+              }
+              if (
+                typeof a[sort.id] === "string" &&
+                typeof b[sort.id] === "string"
+              ) {
+                if (sort.desc) {
+                  return (b[sort.id]?.toString() ?? "").localeCompare(
+                    a[sort.id]?.toString() ?? "",
+                  );
+                } else {
+                  return (a[sort.id]?.toString() ?? "").localeCompare(
+                    b[sort.id]?.toString() ?? "",
+                  );
+                }
+              }
+              if (
+                typeof a[sort.id] === "boolean" &&
+                typeof b[sort.id] === "boolean"
+              ) {
+                if (sort.desc) {
+                  return b[sort.id] === a[sort.id] ? 0 : b[sort.id] ? 1 : -1;
+                } else {
+                  return a[sort.id] === b[sort.id] ? 0 : a[sort.id] ? 1 : -1;
+                }
+              }
+            }
+          }
+
+          return 0; // Add this line to return a default value when no sorting condition is matched
+        });
+      const vesselsWithLocation = paginatedVessels.map((vessel) => {
+        const location =
+          ctx.dataFiles.vesselLocations.find(
+            (location) => location._id === vessel._id,
+          ) ?? null;
+
+        return {
+          ...vessel,
+          location: {
+            latitude: location?.lastpos.geometry.coordinates[0] ?? null,
+            longitude: location?.lastpos.geometry.coordinates[1] ?? null,
+          },
+        };
+      });
+
+      return {
+        data: vesselsWithLocation,
+        count: vessels.length,
+      };
+    }),
   getFleets: publicProcedure
     .input(
       z.object({
