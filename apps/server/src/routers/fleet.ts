@@ -1,7 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { sortStateSchemaFleet, sortStateSchemaVessel } from "@acme/validators";
+import {
+  filtersStateSchemaVessel,
+  sortStateSchemaFleet,
+  sortStateSchemaVessel,
+} from "@acme/validators";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -18,10 +22,11 @@ export const fleetRouter = createTRPCRouter({
         take: z.number().min(1).max(100),
         skip: z.number().min(0),
         sort: sortStateSchemaVessel,
+        filter: filtersStateSchemaVessel,
       }),
     )
     .query(({ ctx, input }) => {
-      console.log(input.sort);
+      console.log(input.filter);
       const fleet = ctx.dataFiles.fleets.find(
         (fleet) => fleet._id === input.fleetId,
       );
@@ -31,9 +36,57 @@ export const fleetRouter = createTRPCRouter({
 
       const vessels = ctx.dataFiles.vessels.filter((vessel) => {
         const fleetVesselsId = fleet.vessels.map((vessel) => vessel._id);
-        return fleetVesselsId.includes(vessel._id);
-      });
+        const nameFilterString = input.filter.find(
+          (filter) => filter.id === "name",
+        )?.value;
+        const flagFilterString = input.filter.find(
+          (filter) => filter.id === "flag",
+        )?.value;
+        const mmsiFilterString = input.filter.find(
+          (filter) => filter.id === "mmsi",
+        )?.value;
 
+        const nameFilter =
+          (!vessel.name && !nameFilterString) ||
+          (vessel.name &&
+            (!nameFilterString ||
+              vessel.name
+                .toLowerCase()
+                .includes(nameFilterString.toLowerCase())))
+            ? true
+            : false;
+
+        const flagFilter =
+          (!vessel.flag && !flagFilterString) ||
+          (vessel.flag &&
+            (!flagFilterString ||
+              vessel.flag
+                .toLowerCase()
+                .includes(flagFilterString.toLowerCase())))
+            ? true
+            : false;
+
+        const mmsiFilter =
+          (!vessel.mmsi && !mmsiFilterString) ||
+          (vessel.mmsi &&
+            (!mmsiFilterString ||
+              vessel.mmsi.toString().includes(mmsiFilterString.toLowerCase())))
+            ? true
+            : false;
+        return (
+          fleetVesselsId.includes(vessel._id) &&
+          nameFilter &&
+          flagFilter &&
+          mmsiFilter
+        );
+      });
+      //  vessel.flag
+      //             ?.toLowerCase()
+      //             .includes(flagFilter?.toLowerCase() ?? "") &&
+      //           vessel.name
+      //             ?.toLowerCase()
+      //             .includes(nameFilter?.toLowerCase() ?? "") &&
+      //           vessel.mmsi.toString().includes(mmsiFilter ?? "")
       // Use slice to implement pagination
       const paginatedVessels = vessels
         .slice(input.skip, input.skip + input.take)

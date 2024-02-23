@@ -13,6 +13,7 @@ export const Route = createFileRoute("/fleets/$fleetId")({
       skip: 0,
       take: 10,
       sort: [],
+      filter: [],
     });
   },
 });

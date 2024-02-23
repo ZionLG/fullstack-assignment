@@ -12,7 +12,10 @@ import { trpc } from "@/utils/trpc";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
-import { sortStateSchemaVessel } from "@acme/validators";
+import {
+  filtersStateSchemaVessel,
+  sortStateSchemaVessel,
+} from "@acme/validators";
 
 export const Route = createLazyFileRoute("/fleets/$fleetId")({
   component: FleetComponent,
@@ -44,6 +47,7 @@ function FleetComponent() {
       take: pageSize,
       skip: pageIndex * pageSize,
       sort: sorting as z.infer<typeof sortStateSchemaVessel>,
+      filter: columnFilters as z.infer<typeof filtersStateSchemaVessel>,
     },
     {
       placeholderData: (previous) => previous,
@@ -61,12 +65,7 @@ function FleetComponent() {
           pageCount: Math.ceil((data?.count ?? 1) / pageSize),
           pagination: pagination,
           setPagination: setPagination,
-          initialVisibility: {
-            createdAt: false,
-            customerName: false,
-            operationalToolType: false,
-            id: false,
-          },
+          initialVisibility: {},
           columnFilters: columnFilters,
           setColumnFilters: setColumnFilters,
           sorting: sorting,

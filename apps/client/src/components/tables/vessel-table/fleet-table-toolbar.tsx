@@ -19,14 +19,30 @@ export function DataTableToolbar<TData>({
     <div className="flex flex-col items-center justify-between gap-5 lg:flex-row">
       <div className="flex w-full flex-1 flex-col gap-2 lg:flex-row lg:items-center lg:space-x-2">
         <div className="flex flex-col gap-2">
-          {/* <Input
+          <Input
             placeholder="Filter By Name..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
             className="h-8 w-full lg:w-[150px]"
-          /> */}
+          />
+          <Input
+            placeholder="Filter By Flag..."
+            value={(table.getColumn("flag")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("flag")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-full lg:w-[150px]"
+          />
+          <Input
+            placeholder="Filter By MMSI..."
+            value={(table.getColumn("mmsi")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("mmsi")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-full lg:w-[150px]"
+          />
         </div>
 
         {isFiltered && (
