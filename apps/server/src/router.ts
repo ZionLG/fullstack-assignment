@@ -1,8 +1,8 @@
-import { testRouter } from "./routers/test";
+import { fleetRouter } from "./routers/fleet";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
-  test: testRouter,
+  fleet: fleetRouter,
 });
 
 // Export only the type of a router!

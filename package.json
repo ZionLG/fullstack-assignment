@@ -10,11 +10,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "pnpm --filter validators build && turbo run dev",
     "build": "turbo run build",
-    "db:generate": "turbo db:generate",
-    "db:push": "turbo db:push db:generate",
-    "db:studio": "pnpm -F db dev",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",

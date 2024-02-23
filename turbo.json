@@ -1,24 +1,16 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["**/.env"],
   "pipeline": {
     "topo": {
       "dependsOn": ["^topo"]
     },
     "dev": {
+      "dependsOn": ["^build"],
       "persistent": true,
       "cache": false
     },
-    "db:generate": {
-      "inputs": ["prisma/schema.prisma"],
-      "cache": false
-    },
-    "db:push": {
-      "inputs": ["prisma/schema.prisma"],
-      "cache": false
-    },
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "format": {
