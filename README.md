@@ -1,6 +1,7 @@
-# Fastify (with Websockets) + tRPC + React (Vite) + Turborepo (pnpm)
+# Home fullstack Assignment
 
-A minimal monorepo with Fastifyjs and React with tRPC support.
-
-Thanks Darius for the original template
-https://github.com/dariuspasca/react-express-trpc-turborepo
+Built with
+- Fastify (tRPC)
+- Vite (React - Tanstack Router)
+- Tanstack Table
+- Leaflet
