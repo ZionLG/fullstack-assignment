@@ -1,29 +1,39 @@
 import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import {
-  RouterProvider,
-  Router,
-} from "@tanstack/react-router";
+
 import { routeTree } from "./routeTree.gen";
+import { queryClient, trpc, trpcClient } from "./utils/trpc";
 
+import "./index.css";
 
-
-
-// Set up a Router instance
-const router = new Router({
+const router = createRouter({
   routeTree,
-  defaultPreload: 'intent',
-})
-
+  defaultPreload: "intent",
+});
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
   }
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+function App() {
+  return (
+    // Build our routes and render our router
+    <main>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </trpc.Provider>
+    </main>
+  );
+}
+const rootElement = document.getElementById("root")!;
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+    <App />
+  </React.StrictMode>,
 );

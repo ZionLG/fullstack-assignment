@@ -1,5 +1,4 @@
 import cors from "@fastify/cors";
-import ws from "@fastify/websocket";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 
@@ -12,11 +11,7 @@ const server = fastify({
 void server.register(cors, {
   // put your options here
 });
-void server.register(ws);
-
 void server.register(fastifyTRPCPlugin, {
-  prefix: "/trpc",
-  useWSS: true,
   trpcOptions: { router: appRouter, createContext },
 });
 

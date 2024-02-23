@@ -1,14 +1,16 @@
 import * as React from "react";
-import { FileRoute } from "@tanstack/react-router";
+import { trpc } from "@/utils/trpc";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = new FileRoute('/').createRoute({
+export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
 function HomeComponent() {
+  const { data, isPending } = trpc.test.greeting.useQuery({ name: "Liran" });
   return (
     <div className="p-2">
-      <h3>Welcome Home!</h3>
+      <h3>{data?.text}</h3>
     </div>
   );
 }

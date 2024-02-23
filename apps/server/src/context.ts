@@ -1,5 +1,35 @@
+import fs from "fs";
 import type { CreateFastifyContextOptions } from "@trpc/server/adapters/fastify";
 
+import { DataMap, dataTypes } from "./types";
+
+function readJSONFiles(filePaths: string[]) {
+  const jsonData: DataMap = {
+    fleets: [],
+    vessels: [],
+    vesselLocations: [],
+  };
+
+  filePaths.forEach((filePath) => {
+    try {
+      const fileData = fs.readFileSync(filePath, "utf8");
+      const fileName = filePath.split("/").pop()?.split(".")?.[0]; // Extract file name without extension
+      if (fileName) {
+        const parsedName = dataTypes.parse(fileName); // Ensure the file name is a valid data type
+        jsonData[parsedName] = JSON.parse(fileData);
+      }
+    } catch (error) {
+      console.error(`Error reading file ${filePath}: ${error}`);
+    }
+  });
+
+  return jsonData;
+}
+const dataFiles = readJSONFiles([
+  "./src/data/fleets.json",
+  "./src/data/vessels.json",
+  "./src/data/vesselLocations.json",
+]);
 /**
  * Defines your inner context shape.
  * Add fields here that the inner context brings.
@@ -16,8 +46,7 @@ type CreateInnerContextOptions = Partial<CreateFastifyContextOptions>;
  * @see https://trpc.io/docs/context#inner-and-outer-context
  */
 export function createContextInner(_opts?: CreateInnerContextOptions) {
-  return {
-  };
+  return { dataFiles };
 }
 
 export function createContext({ req, res }: CreateFastifyContextOptions) {
