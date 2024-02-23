@@ -14,13 +14,6 @@ export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: "http://localhost:4000",
-
-      // optional
-      headers() {
-        return {
-          // authorization: getAuthCookie(),
-        };
-      },
     }),
   ],
 });

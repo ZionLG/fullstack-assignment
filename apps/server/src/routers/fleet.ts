@@ -80,13 +80,7 @@ export const fleetRouter = createTRPCRouter({
           mmsiFilter
         );
       });
-      //  vessel.flag
-      //             ?.toLowerCase()
-      //             .includes(flagFilter?.toLowerCase() ?? "") &&
-      //           vessel.name
-      //             ?.toLowerCase()
-      //             .includes(nameFilter?.toLowerCase() ?? "") &&
-      //           vessel.mmsi.toString().includes(mmsiFilter ?? "")
+
       // Use slice to implement pagination
       const paginatedVessels = vessels
         .slice(input.skip, input.skip + input.take)

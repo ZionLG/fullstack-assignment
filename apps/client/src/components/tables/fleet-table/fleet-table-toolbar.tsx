@@ -17,17 +17,6 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex flex-col items-center justify-between gap-5 lg:flex-row">
       <div className="flex w-full flex-1 flex-col gap-2 lg:flex-row lg:items-center lg:space-x-2">
-        <div className="flex flex-col gap-2">
-          {/* <Input
-            placeholder="Filter By Name..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="h-8 w-full lg:w-[150px]"
-          /> */}
-        </div>
-
         {isFiltered && (
           <Button
             variant="ghost"

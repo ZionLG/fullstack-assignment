@@ -7,10 +7,5 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  const { data, isPending } = trpc.fleet.greeting.useQuery({ name: "Liran" });
-  return (
-    <div className="p-2">
-      <h3>{data?.text}</h3>
-    </div>
-  );
+  return <div></div>;
 }
